@@ -7,11 +7,13 @@ import java.io.IOException;
 class RandomNumberEventSource implements EventSource {
     private Emitter emitter;
 
+	@Override
     public void onOpen(Emitter emitter) throws IOException {
 		System.out.println("Connection opened.");
         this.emitter = emitter;
 
         emitEvent("hallo thar!");
+		emitter.comment("foo");
 
 		RandomEmitter random = new RandomEmitter(this);
 		random.run();
@@ -22,6 +24,7 @@ class RandomNumberEventSource implements EventSource {
         this.emitter.data(dataToSend);
     }
 
+	@Override
     public void onClose() {
 		System.out.println("Connection closed.");
 	}

@@ -20,6 +20,10 @@
       If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
       <async-supported>true</async-supported>
       -->
+      <init-param>
+          <param-name>heartBeatPeriod</param-name>
+          <param-value>1</param-value>
+      </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>com.adeptusproductions.sse.RandomNumberEventSource</servlet-name>
