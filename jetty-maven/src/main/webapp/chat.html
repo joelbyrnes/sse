@@ -3,17 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <script type='text/javascript'>
-        var source = new EventSource("randomNumber");
+        var source = new EventSource("/chat/channel");
 
         var counter = 0;
-
-        /*
-        source.addEventListener('message', function(e) {
-            console.log(e.data);
-            //alert("got message");
-            handleData("message", e.data);
-        }, false);
-        */
 
         source.addEventListener('open', function(e) {
             // Connection was opened.
@@ -40,13 +32,6 @@
             //alert("onmessage");
             handleData("onmessage", event.data);
         };
-
-        /*
-        source.onerror = function(event) {
-            //alert("onerror");
-            handleData("onerror", event.data);
-        };
-        */
 
         function handleData(eventName, data) {
             var tbody = document.getElementById('numbers').tBodies[0];
@@ -85,11 +70,10 @@
         }
 
     </script>
-    <title>HTML Server-Side events example</title>
+    <title>Simple chat channel using HTML5 Server-Side Events</title>
 </head>
 <body>
-<h3>Receive a random number every second</h3>
-
+test
 <div id="result"></div>
 
 <table id="numbers" border="1">

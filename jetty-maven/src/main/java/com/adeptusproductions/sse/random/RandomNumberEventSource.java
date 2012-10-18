@@ -1,4 +1,4 @@
-package com.adeptusproductions.sse;
+package com.adeptusproductions.sse.random;
 
 import org.eclipse.jetty.servlets.EventSource;
 
@@ -25,7 +25,7 @@ class RandomNumberEventSource implements EventSource {
     }
 
 	@Override
-    public void onClose() {
+  public void onClose() {
 		System.out.println("Connection closed.");
 	}
 }

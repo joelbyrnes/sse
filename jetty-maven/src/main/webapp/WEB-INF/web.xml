@@ -14,8 +14,8 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>com.adeptusproductions.sse.RandomNumberEventSource</servlet-name>
-    <servlet-class>com.adeptusproductions.sse.RandomNumberEventSourceServlet</servlet-class>
+    <servlet-name>RandomNumberEventSourceServlet</servlet-name>
+    <servlet-class>com.adeptusproductions.sse.random.RandomNumberEventSourceServlet</servlet-class>
       <!--
       If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
       <async-supported>true</async-supported>
@@ -26,8 +26,25 @@
       </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>com.adeptusproductions.sse.RandomNumberEventSource</servlet-name>
+    <servlet-name>RandomNumberEventSourceServlet</servlet-name>
     <url-pattern>/randomNumber</url-pattern>
   </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ChatEventSourceServlet</servlet-name>
+        <servlet-class>com.adeptusproductions.sse.chat.ChatEventSourceServlet</servlet-class>
+        <!--
+        If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
+        <async-supported>true</async-supported>
+        -->
+        <init-param>
+            <param-name>heartBeatPeriod</param-name>
+            <param-value>0</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChatEventSourceServlet</servlet-name>
+        <url-pattern>/chat/channel</url-pattern>
+    </servlet-mapping>
 
 </web-app>

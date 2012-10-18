@@ -1,4 +1,4 @@
-package com.adeptusproductions.sse;
+package com.adeptusproductions.sse.random;
 
 import org.eclipse.jetty.servlets.EventSource;
 
