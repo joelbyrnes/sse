@@ -7,15 +7,9 @@
 
 	var counter = 0;
 
-    source.addEventListener('event', function(e) {
-//        console.log(e.data);
-        alert("got event");
-        addResponse(e.data);
-    }, false);
-
     source.addEventListener('message', function(e) {
-//        console.log(e.data);
-        alert("got message");
+        console.log(e.data);
+        //alert("got message");
         addResponse(e.data);
     }, false);
 
@@ -32,6 +26,7 @@
     }, false);
 
 	source.onmessage = function(event) {
+        //alert("onmessage");
         handleData(event.data);
 	};
 

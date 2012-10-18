@@ -22,8 +22,8 @@ public class RandomNumberServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		resp.setContentType("text/event-stream");
-		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("text/event-stream;charset=utf-8");
+//		resp.setCharacterEncoding("utf-8");
 
 		Random random = new Random();
 
@@ -33,7 +33,7 @@ public class RandomNumberServlet extends HttpServlet {
 
 		System.out.println(next);
 
-		writer.write(next + "\r\n");
+		writer.println(next);
 
 		writer.flush();
 	}
