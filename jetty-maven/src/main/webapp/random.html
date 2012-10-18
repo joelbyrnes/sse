@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type='text/javascript'>
+	var source = new EventSource("randomNumber");
+
+	var counter = 0;
+
+    source.addEventListener('event', function(e) {
+//        console.log(e.data);
+        alert("got event");
+        addResponse(e.data);
+    }, false);
+
+    source.addEventListener('message', function(e) {
+//        console.log(e.data);
+        alert("got message");
+        addResponse(e.data);
+    }, false);
+
+    source.addEventListener('open', function(e) {
+      // Connection was opened.
+    }, false);
+
+    source.addEventListener('error', function(e) {
+        handleData("error");
+      if (e.readyState == EventSource.CLOSED) {
+        // Connection was closed.
+          handleData("connection closed");
+      }
+    }, false);
+
+	source.onmessage = function(event) {
+        handleData(event.data);
+	};
+
+    function handleData(data) {
+		var tbody = document.getElementById('numbers').tBodies[0];
+
+		var tr = tbody.insertRow(0);
+
+		var counterTd = tr.insertCell(0);
+
+		counterTd.innerHTML = counter++;
+
+		var randomTd = tr.insertCell(1);
+
+		randomTd.innerHTML = data;
+
+//        document.getElementById("result").innerHTML+=event.data + "<br>";
+    }
+</script>
+<title>HTML Server-Side events example</title>
+</head>
+<body>
+test
+<div id="result"></div>
+
+	<table id="numbers" border="1">
+		<tbody />
+	</table>
+</body>
+</html>
