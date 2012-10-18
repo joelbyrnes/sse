@@ -6,7 +6,7 @@
    version="2.5">
   <servlet>
     <servlet-name>Hello</servlet-name>
-    <servlet-class>HelloServlet</servlet-class>
+    <servlet-class>com.adeptusproductions.sse.HelloServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Hello</servlet-name>
@@ -14,12 +14,16 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>RandomNumber</servlet-name>
-    <servlet-class>RandomNumberServlet</servlet-class>
+    <servlet-name>com.adeptusproductions.sse.RandomNumberEventSource</servlet-name>
+    <servlet-class>com.adeptusproductions.sse.RandomNumberEventSourceServlet</servlet-class>
+      <!--
+      If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
+      <async-supported>true</async-supported>
+      -->
   </servlet>
   <servlet-mapping>
-    <servlet-name>RandomNumber</servlet-name>
-    <url-pattern>/randomNumber/*</url-pattern>
+    <servlet-name>com.adeptusproductions.sse.RandomNumberEventSource</servlet-name>
+    <url-pattern>/randomNumber</url-pattern>
   </servlet-mapping>
 
 </web-app>
