@@ -47,4 +47,14 @@
         <url-pattern>/chat/channel</url-pattern>
     </servlet-mapping>
 
+    <!-- for clients to send messages to the channel -->
+    <servlet>
+        <servlet-name>SendServlet</servlet-name>
+        <servlet-class>com.adeptusproductions.sse.chat.SendServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SendServlet</servlet-name>
+        <url-pattern>/chat/send</url-pattern>
+    </servlet-mapping>
+
 </web-app>

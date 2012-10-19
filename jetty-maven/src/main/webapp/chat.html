@@ -73,7 +73,13 @@
     <title>Simple chat channel using HTML5 Server-Side Events</title>
 </head>
 <body>
-test
+Chat<br/>
+
+<form method="POST" action="/chat/send">
+    <input type="text" name="message">
+    <input type="submit">
+</form>
+
 <div id="result"></div>
 
 <table id="numbers" border="1">
