@@ -6,8 +6,8 @@ import org.eclipse.jetty.servlets.EventSource.Emitter
 class ChatClientEventSource implements EventSource {
   private Emitter emitter;
 
-  // TODO get shared instance
-  Channel channel = new Channel();
+  // TODO use Guice or something to inject this - how do we start the injector with maven jetty or deployed war?
+  Channel channel = Channel.getInstance()
 
   @Override
   public void onOpen(Emitter emitter) throws IOException {
@@ -15,7 +15,6 @@ class ChatClientEventSource implements EventSource {
     this.emitter = emitter;
 
     channel.addClient(this)
-
   }
 
   public void emitEvent(String dataToSend) throws IOException {
