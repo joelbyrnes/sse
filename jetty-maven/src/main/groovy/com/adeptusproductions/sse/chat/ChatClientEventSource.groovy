@@ -4,26 +4,31 @@ import org.eclipse.jetty.servlets.EventSource
 import org.eclipse.jetty.servlets.EventSource.Emitter
 
 class ChatClientEventSource implements EventSource {
-  private Emitter emitter;
+    private Emitter emitter;
 
-  // TODO use Guice or something to inject this - how do we start the injector with maven jetty or deployed war?
-  Channel channel = Channel.getInstance()
+    Channel channel = Channel.getInstance()
+    String name
 
-  @Override
-  public void onOpen(Emitter emitter) throws IOException {
-    System.out.println("Connection opened.");
-    this.emitter = emitter;
+    public ChatClientEventSource(String name) {
+        this.name = name;
+    }
 
-    channel.addClient(this)
-  }
+    @Override
+    public void onOpen(Emitter emitter) throws IOException {
+        println "Connection opened by user ${name}."
+        this.emitter = emitter
 
-  public void emitEvent(String dataToSend) throws IOException {
-    System.out.println("Sending: " + dataToSend);
-    this.emitter.data(dataToSend);
-  }
+        channel.addClient(name, this)
+    }
 
-  @Override
-  public void onClose() {
-    System.out.println("Connection closed.");
-  }
+    public void emitEvent(String dataToSend) throws IOException {
+        println "[${name}] Sending: " + dataToSend
+        this.emitter.data("${dataToSend}\n")
+    }
+
+    @Override
+    public void onClose() {
+        println "Connection closed."
+        channel.left(name)
+    }
 }

@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ChatEventSourceServlet extends org.eclipse.jetty.servlets.EventSourceServlet {
   @Override
   protected EventSource newEventSource(HttpServletRequest request) {
-    return new ChatClientEventSource();
+    String name = request.getParameter("name")
+
+    return new ChatClientEventSource(name);
   }
 
 }

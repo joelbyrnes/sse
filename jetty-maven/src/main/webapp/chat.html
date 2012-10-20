@@ -2,10 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
     <script type='text/javascript'>
-        var source = new EventSource("/chat/channel");
 
-        var counter = 0;
+      var source;
+      var counter;
+
+      function openChannel(name) {
+        source = new EventSource("/chat/channel?name=" + name);
+
+        counter = 0;
 
         source.addEventListener('open', function(e) {
             // Connection was opened.
@@ -13,19 +19,20 @@
         }, false);
 
         source.addEventListener('error', function(e) {
-            handleData("error", e);
             writeObj(e);
+            var errorMsg = "unknown"
             switch (e.target.readyState) {
                 // if reconnecting
                 case EventSource.CONNECTING:
-                    handleData("error", 'Reconnecting...');
+                    errorMsg = 'Reconnecting...';
                     break;
                 // if error was fatal
                 case EventSource.CLOSED:
                     // Connection was closed.
-                    handleData("error", "connection closed");
+                    errorMsg = "Connection closed";
                     break;
             }
+            handleData("error", errorMsg);
         }, false);
 
         source.onmessage = function(event) {
@@ -68,6 +75,13 @@
             }
             console.log(details);
         }
+      }
+
+    function send(name, message) {
+        data = {"name": name, "message": message};
+        $.post("/chat/send", data);
+        // TODO handle failure, retry?
+    }
 
     </script>
     <title>Simple chat channel using HTML5 Server-Side Events</title>
@@ -75,9 +89,15 @@
 <body>
 Chat<br/>
 
+<form method="GET" action="/chat">
+    <input id="username" type="text" name="name">
+    <input type="submit" value="Connect" onclick="openChannel(getElementById('username').value); return false;">
+</form>
+<br/>
+
 <form method="POST" action="/chat/send">
-    <input type="text" name="message">
-    <input type="submit">
+    <input id="message" type="text" name="message">
+    <input type="submit" value="Send" onclick="send(getElementById('username').value, getElementById('message').value); return false;">
 </form>
 
 <div id="result"></div>

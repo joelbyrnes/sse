@@ -9,11 +9,11 @@ class SendServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name = request.getParameter("name")
         String message = request.getParameter("message")
-        println "got message ${message}"
+        println "got message ${message} from ${name}"
 
-        // TODO needs a client name
-        Channel.getInstance().message(message)
+        Channel.getInstance().message(name, message)
 
         // TODO for some reason the browser complains that no response was received. not sure if this matters with ajax.
 //        response.setStatus(200)
