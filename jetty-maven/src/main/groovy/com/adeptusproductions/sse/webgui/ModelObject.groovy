@@ -2,18 +2,21 @@ package com.adeptusproductions.sse.webgui
 
 class ModelObject {
 
+    int id
     View view
+    // more specific fields...
 
-    ModelObject(View view) {
+    ModelObject(int id, View view) {
+        this.id = id
         this.view = view
     }
 
-    Object everySecond(Closure closure) {
+    void everySecond(Closure closure) {
         // create timer - thread or loop or what?
     }
 
-    def moveLeft(int distance) {
-        // update position
+    void moveLeft(int distance) {
+        // update position ...
         // send update of absolute position to view
         view.update(this)
     }
