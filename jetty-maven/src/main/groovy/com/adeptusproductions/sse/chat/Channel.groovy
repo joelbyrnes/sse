@@ -11,11 +11,13 @@ class Channel {
 
     void addClient(String name, ChatClientEventSource chatClientEventSource) {
         clients.put(name, chatClientEventSource)
-        sendToAll("Channel", "User ${name} has joined the channel. Clients: ${clients.size()}")
+        sendToAll("Channel", "User ${name} has joined the channel. Users: ${clients.size()}")
     }
 
     void sendToAll(name, String message) {
-        String event = "{'eventId'='${eventId++}', 'user'='${name}', 'message'='${message}'}"
+        println "Channel sendToAll: " + message
+        // TODO need some JSON de/serialization library - jersey?
+        String event = "{\"eventId\":\"${eventId++}\", \"user\":\"${name}\", \"message\":\"${message}\"}"
         clients.values().each { ChatClientEventSource client -> client.emitEvent(event) }
     }
 
@@ -26,6 +28,5 @@ class Channel {
     def left(String name) {
         clients.remove(name)
         sendToAll("Channel", "User ${name} has left the channel. Clients: ${clients.size()}")
-
     }
 }

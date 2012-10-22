@@ -53,11 +53,18 @@
 
             eventTd.innerHTML = eventName;
 
-            var randomTd = tr.insertCell(2);
+            var messageTd = tr.insertCell(2);
 
-            randomTd.innerHTML = data;
+            messageTd.innerHTML = data;
 
-//        document.getElementById("result").innerHTML+=event.data + "<br>";
+            if (data[0] != '{') return;
+
+            // TODO catch SyntaxError
+            var parsed = jQuery.parseJSON(data);
+
+            tr.insertCell(3).innerHTML = "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
+
+//        document.getElementById("result").innerHTML += "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
         }
 
         function writeObj(obj, message) {
