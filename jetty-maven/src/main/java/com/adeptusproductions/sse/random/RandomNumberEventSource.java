@@ -26,14 +26,14 @@ class RandomNumberEventSource implements EventSource, Runnable {
     System.out.println("Connection opened.");
     this.emitter = emitter;
 
-    emitEvent("hallo thar!");
-    emitter.comment("foo");
+    emitEvent("hallo thar!\n");
+    emitter.comment("foo\n");
 
     this.run();
   }
 
   public void emitEvent(String dataToSend) throws IOException {
-    System.out.println("Sending: " + dataToSend);
+    System.out.print("Sending: " + dataToSend);
     this.emitter.data(dataToSend);
   }
 
@@ -47,9 +47,10 @@ class RandomNumberEventSource implements EventSource, Runnable {
     // send a random number every second until there is an IOException, ie client leaves.
     while(true) {
       try {
-        sleepThenSend(1000, String.valueOf(random.nextInt(100) + 1));
+        sleepThenSend(1000, String.valueOf(random.nextInt(100) + 1) + "\n");
       } catch (IOException e) {
         System.out.println("IOException sending message. Exiting.");
+	  	emitter.close();
         break;
       }
     }

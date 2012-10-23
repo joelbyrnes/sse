@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app
-   xmlns="http://java.sun.com/xml/ns/javaee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-   version="2.5">
-  <servlet>
-    <servlet-name>Hello</servlet-name>
-    <servlet-class>com.adeptusproductions.sse.HelloServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Hello</servlet-name>
-    <url-pattern>/hello/*</url-pattern>
-  </servlet-mapping>
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        version="2.5">
+    <servlet>
+        <servlet-name>Hello</servlet-name>
+        <servlet-class>com.adeptusproductions.sse.HelloServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Hello</servlet-name>
+        <url-pattern>/hello/*</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>RandomNumberEventSourceServlet</servlet-name>
-    <servlet-class>com.adeptusproductions.sse.random.RandomNumberEventSourceServlet</servlet-class>
-      <!--
-      If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
-      <async-supported>true</async-supported>
-      -->
-      <init-param>
-          <param-name>heartBeatPeriod</param-name>
-          <param-value>0</param-value>
-      </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>RandomNumberEventSourceServlet</servlet-name>
-    <url-pattern>/randomNumber</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>RandomNumberEventSourceServlet</servlet-name>
+        <servlet-class>com.adeptusproductions.sse.random.RandomNumberEventSourceServlet</servlet-class>
+        <!--
+              If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
+              <async-supported>true</async-supported>
+              -->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RandomNumberEventSourceServlet</servlet-name>
+        <url-pattern>/randomNumber</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>ChatEventSourceServlet</servlet-name>
@@ -37,10 +33,6 @@
         If you are running in a Servlet 3 compliant container (Jetty 8, Tomcat 7, etc.)
         <async-supported>true</async-supported>
         -->
-        <init-param>
-            <param-name>heartBeatPeriod</param-name>
-            <param-value>1</param-value>
-        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>ChatEventSourceServlet</servlet-name>
@@ -55,6 +47,15 @@
     <servlet-mapping>
         <servlet-name>SendServlet</servlet-name>
         <url-pattern>/chat/send</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TracerouteEventSourceServlet</servlet-name>
+        <servlet-class>com.adeptusproductions.sse.traceroute.TracerouteEventSourceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TracerouteEventSourceServlet</servlet-name>
+        <url-pattern>/traceroute</url-pattern>
     </servlet-mapping>
 
 </web-app>

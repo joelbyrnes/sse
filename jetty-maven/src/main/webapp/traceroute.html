@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type='text/javascript'>
+
+      var source;
+      var counter;
+
+      function startTraceroute(host) {
+        source = new EventSource("/traceroute?host=" + host);
+
+        counter = 0;
+
+        source.addEventListener('open', function(e) {
+            // Connection was opened.
+            handleData("open", "Connection opened");
+        }, false);
+
+        source.addEventListener('error', function(e) {
+            writeObj(e);
+            var errorMsg = "unknown"
+            switch (e.target.readyState) {
+                // if reconnecting
+                case EventSource.CONNECTING:
+                    errorMsg = 'Reconnecting...';
+                    break;
+                // if error was fatal
+                case EventSource.CLOSED:
+                    // Connection was closed.
+                    errorMsg = "Connection closed";
+                    break;
+            }
+            handleData("error", errorMsg);
+        }, false);
+
+        source.onmessage = function(event) {
+            //alert("onmessage");
+            handleData("onmessage", event.data);
+        };
+
+        function handleData(eventName, data) {
+            var tbody = document.getElementById('numbers').tBodies[0];
+
+            var tr = tbody.insertRow(0);
+
+            var counterTd = tr.insertCell(0);
+
+            counterTd.innerHTML = counter++;
+
+            var eventTd = tr.insertCell(1);
+
+            eventTd.innerHTML = eventName;
+
+            var messageTd = tr.insertCell(2);
+
+            messageTd.innerHTML = data;
+
+            if (data[0] != '{') return;
+
+            // TODO catch SyntaxError
+            var parsed = jQuery.parseJSON(data);
+
+            tr.insertCell(3).innerHTML = "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
+        }
+
+        function writeObj(obj, message) {
+            if (!message) {
+                message = obj;
+            }
+            var details = "*****************" + "\n" + message + "\n";
+            var fieldContents;
+            for (var field in obj) {
+                fieldContents = obj[field];
+                if (typeof(fieldContents) == "function") {
+                    fieldContents = "(function)";
+                }
+                details += "  " + field + ": " + fieldContents + "\n";
+            }
+            console.log(details);
+        }
+      }
+
+    function send(name, message) {
+        data = {"name": name, "message": message};
+        $.post("/chat/send", data);
+        // TODO handle failure, retry?
+    }
+
+    </script>
+    <title>HTML Server-Side events example</title>
+</head>
+<body>
+<h3>Real-time traceroute with geographical placement using Google Maps</h3>
+
+- enter an IP or hostname<br/>
+- server starts traceroute, reports IP or hostnames along the route, and pings, real-time to the browser<br/>
+- browser looks up host via Geo IP sites (does it report lat-long or just city?)<br/>
+- places pins on map with lines between them (may need to look up lat-long with geo service)<br/>
+- show textual traceroute results to the right of map<br/>
+<br/>
+further improvements:<br/>
+- follow each host along the way with regular pings and show ping spikes, to narrow down location- or link-specific congestion.<br/>
+<br/>
+
+<form method="GET" action="/traceroute">
+    Host/IP: <input id="host" type="text" name="host">
+    <input type="submit" value="Traceroute" onclick="startTraceroute(getElementById('host').value); return false;">
+</form>
+<br/>
+
+<table id="numbers" border="1">
+    <tbody/>
+</table>
+</body>
+</html>
