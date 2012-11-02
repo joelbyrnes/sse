@@ -3,12 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyANAOHPxsJJLf37uzJspHUzGNvc0A87xN8&sensor=true">
+    </script>
     <script type='text/javascript'>
+        var map;
+
+        var infowindow = new google.maps.InfoWindow();
+
+        function initialize() {
+            var myOptions = {
+                center: new google.maps.LatLng(-27.48, 153.01),
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        }
+
 
       var source;
       var counter;
 
+        var pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+        new google.maps.Size(40, 37),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12, 35));
+
       function startTraceroute(host) {
+        //removeMarkers(markers);
+
+        initialize();
+
         source = new EventSource("/traceroute?host=" + host);
 
         counter = 0;
@@ -53,16 +78,95 @@
 
             eventTd.innerHTML = eventName;
 
-            var messageTd = tr.insertCell(2);
-
-            messageTd.innerHTML = data;
+            //tr.insertCell(2).innerHTML = data;
 
             if (data[0] != '{') return;
 
             // TODO catch SyntaxError
             var parsed = jQuery.parseJSON(data);
 
-            tr.insertCell(3).innerHTML = "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
+            tr.insertCell(2).innerHTML = "&lt;" + parsed.ipAddress + "&gt; " + parsed.cityName + ", " + parsed.regionName + ", " + parsed.countryName + "<br>";
+
+            // create marker
+            addHop(parsed);
+        }
+
+        var markers = [];
+        var hops = 0;
+
+        function addHop(hop) {
+        console.log("adding hop " + hops);
+            hops++;
+            if (hop.latitude == 0 && hop.longitude == 0) return;
+
+            //alert("creating marker for " + hop.ipAddress);
+            var latLong = new google.maps.LatLng(hop.latitude, hop.longitude);
+
+            var marker = new google.maps.Marker({
+                map: map,
+                draggable: false,
+                position: latLong,
+                title: hop.ipAddress
+                //icon: someIcon,
+                //shadow: pinShadow
+            });
+            // TODO add infoWindow for marker with location and ping info
+            // addInfoWindow(marker, htmlString)
+
+            // TODO draw line from last marker to this one
+            if (markers.length > 0) addLine(markers[markers.length - 1].position, marker.position);
+
+            markers.push(marker);
+
+            // TODO zoom out, and back in to the new point, relative to the distance between points.
+
+            map.setCenter(latLong, 10);
+
+            // TODO when all done, zoom out to fit all markers in bounds
+        }
+
+        var lines = [];
+
+        function addLine(point1, point2) {
+        console.log("adding line");
+            var coords = [ point1, point2 ];
+            var line = new google.maps.Polyline({
+                path: coords,
+                strokeColor: "#FF0000",
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            line.setMap(map);
+
+            lines.push(line);
+        }
+
+        function removeMarkers(markers) {
+            for(var i=0; i < markers.length; i++){
+                markers[i].setMap(null);
+            }
+        }
+
+        function addInfoWindow(marker, infocontent) {
+        google.maps.event.addListener(marker, 'click', (function(theMarker, content) {
+        return function() {
+        // to do multiple windows open at once, create a new infowindow here instead of reusing the one.
+        infowindow.setContent(content);
+        infowindow.open(map, theMarker);
+        }
+        })(marker, infocontent));
+        }
+
+        function auto_center(props) {
+        //  Create a new viewpoint bound
+        var bounds = new google.maps.LatLngBounds();
+        //  Go through each...
+        $.each(props, function (index, prop) {
+        bounds.extend(prop.marker.position);
+        });
+        //  Fit these bounds to the map
+        map.fitBounds(bounds);
         }
 
         function writeObj(obj, message) {
@@ -89,6 +193,17 @@
     }
 
     </script>
+    <style type="text/css">
+        //html { height: 100% }
+        //body { height: 100%; margin: 0; padding: 0 }
+
+        #map_canvas { width: 1000; height: 700px; }
+
+        //.infoWindow {
+        //font-size: 0.8em;
+        //text-spacing: normal;
+        //}
+    </style>
     <title>HTML Server-Side events example</title>
 </head>
 <body>
@@ -104,11 +219,14 @@ further improvements:<br/>
 - follow each host along the way with regular pings and show ping spikes, to narrow down location- or link-specific congestion.<br/>
 <br/>
 
-<form method="GET" action="/traceroute">
+<form method="" action="">
     Host/IP: <input id="host" type="text" name="host">
     <input type="submit" value="Traceroute" onclick="startTraceroute(getElementById('host').value); return false;">
 </form>
 <br/>
+
+
+<div id="map_canvas"></div>
 
 <table id="numbers" border="1">
     <tbody/>
