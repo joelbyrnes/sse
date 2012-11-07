@@ -17,6 +17,7 @@ class Channel {
     void sendToAll(name, String message) {
         println "Channel sendToAll: " + message
         // TODO need some JSON de/serialization library - jersey?
+        // TODO user and message needs to be escaped, and then un-escaped in JS.
         String event = "{\"eventId\":\"${eventId++}\", \"user\":\"${name}\", \"message\":\"${message}\"}"
         clients.values().each { ChatClientEventSource client -> client.emitEvent(event) }
     }

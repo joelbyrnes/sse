@@ -10,12 +10,10 @@
 
       function openChannel(name) {
         source = new EventSource("/chat/channel?name=" + name);
-
         counter = 0;
 
         source.addEventListener('open', function(e) {
-            // Connection was opened.
-            handleData("open", "Connection opened");
+            console.log("open: " + event.data);
         }, false);
 
         source.addEventListener('error', function(e) {
@@ -32,39 +30,22 @@
                     errorMsg = "Connection closed";
                     break;
             }
-            handleData("error", errorMsg);
+            console.log("error: " + errorMsg);
         }, false);
 
         source.onmessage = function(event) {
-            //alert("onmessage");
+            console.log("onmessage: " + event.data);
             handleData("onmessage", event.data);
         };
 
-        function handleData(eventName, data) {
-            var tbody = document.getElementById('numbers').tBodies[0];
-
-            var tr = tbody.insertRow(0);
-
-            var counterTd = tr.insertCell(0);
-
-            counterTd.innerHTML = counter++;
-
-            var eventTd = tr.insertCell(1);
-
-            eventTd.innerHTML = eventName;
-
-            var messageTd = tr.insertCell(2);
-
-            messageTd.innerHTML = data;
-
-            if (data[0] != '{') return;
-
+        function handleData(data) {
             // TODO catch SyntaxError
             var parsed = jQuery.parseJSON(data);
 
-            tr.insertCell(3).innerHTML = "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
+            document.getElementById("channel").innerHTML += "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
 
-//        document.getElementById("result").innerHTML += "&lt;" + parsed.user + "&gt; " + parsed.message + "<br>";
+            // scroll to bottom of div
+            $("#channel").scrollTop($("#channel")[0].scrollHeight)
         }
 
         function writeObj(obj, message) {
@@ -100,17 +81,14 @@ Chat<br/>
     <input id="username" type="text" name="name">
     <input type="submit" value="Connect" onclick="openChannel(getElementById('username').value); return false;">
 </form>
-<br/>
+<hr/>
+
+<div id="channel" style="width: 100%; height: 400px; overflow: auto; display: block;"></div>
 
 <form method="POST" action="/chat/send">
     <input id="message" type="text" name="message">
     <input type="submit" value="Send" onclick="send(getElementById('username').value, getElementById('message').value); return false;">
 </form>
 
-<div id="result"></div>
-
-<table id="numbers" border="1">
-    <tbody/>
-</table>
 </body>
 </html>
