@@ -18,6 +18,15 @@
         <gmaven-plugin.version>1.4</gmaven-plugin.version>
 
     </properties>
+    <!--
+    http://repo.grails.org/grails/spring-uaa-cache/org/springframework/uaa/org.springframework.uaa.client/1.0.0.RELEASE/org.springframework.uaa.client-1.0.0.RELEASE.pom
+    -->
+    <repositories>
+        <repository>
+            <id>spring-uaa-cache</id>
+            <url>http://repo.grails.org/grails/spring-uaa-cache/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -48,6 +57,12 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.grails</groupId>
+            <artifactId>grails-web</artifactId>
+            <version>2.1.1</version>
         </dependency>
 
         <dependency>

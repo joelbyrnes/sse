@@ -1,5 +1,7 @@
 package com.adeptusproductions.sse.chat
 
+import org.codehaus.groovy.grails.web.json.*; // package containing JSONObject, JSONArray,...
+
 class Channel {
     // TODO replace this lame singleton with dep injection
     private static final INSTANCE = new Channel()
@@ -16,10 +18,12 @@ class Channel {
 
     void sendToAll(name, String message) {
         println "Channel sendToAll: " + message
-        // TODO need some JSON de/serialization library - jersey?
-        // TODO user and message needs to be escaped, and then un-escaped in JS.
-        String event = "{\"eventId\":\"${eventId++}\", \"user\":\"${name}\", \"message\":\"${message}\"}"
-        clients.values().each { ChatClientEventSource client -> client.emitEvent(event) }
+        // TODO use an easier JSON converter library like grails.converters.JSON
+        def sw = new StringWriter()
+        new JSONWriter(sw).object().key("eventId").value(eventId++)
+                .key("user").value(name)
+                .key("message").value(message).endObject()
+        clients.values().each { ChatClientEventSource client -> client.emitEvent(sw.toString()) }
     }
 
     void message(user, String message) {
@@ -28,6 +32,6 @@ class Channel {
 
     def left(String name) {
         clients.remove(name)
-        sendToAll("Channel", "User ${name} has left the channel. Clients: ${clients.size()}")
+        sendToAll("Channel", "User ${name} has left the channel. Users: ${clients.size()}")
     }
 }
