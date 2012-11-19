@@ -13,7 +13,7 @@
         counter = 0;
 
         source.addEventListener('open', function(e) {
-            console.log("open: " + event.data);
+            console.log("open: " + e.data);
         }, false);
 
         source.addEventListener('error', function(e) {
@@ -35,7 +35,7 @@
 
         source.onmessage = function(event) {
             console.log("onmessage: " + event.data);
-            handleData("onmessage", event.data);
+            handleData(event.data);
         };
 
         function handleData(data) {
