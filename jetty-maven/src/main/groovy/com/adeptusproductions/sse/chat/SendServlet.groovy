@@ -9,11 +9,17 @@ class SendServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name")
+        String sessionId = request.getSession().getId()
+        String channel = request.getParameter("channel")
         String message = request.getParameter("message")
-        println "got message ${message} from ${name}"
 
-        Channel.getInstance().message(name, message)
+        def system = System.getInstance()
+        def user = system.users.get(sessionId)
+
+        println "got message ${message} from session ${sessionId}, user ${user.name}"
+
+        // TODO use channel param
+        system.channels.get("default").message(user, message)
 
         // TODO for some reason the browser complains that no response was received. not sure if this matters with ajax.
 //        response.setStatus(200)
