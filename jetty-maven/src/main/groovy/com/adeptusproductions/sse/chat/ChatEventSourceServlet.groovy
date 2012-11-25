@@ -13,12 +13,14 @@ public class ChatEventSourceServlet extends org.eclipse.jetty.servlets.EventSour
 
       println "new event source request from ${name} with id ${id}"
 
-      def user = new User(id, name)
       def system = System.getInstance()
-      system.users.put(name, user)
-      system.channels.get("default").join(user)
 
-      println "returning EventSource to browser"
+      def user = new User(id, name)
+
+      user.onConnect {
+          println "connect to system"
+          system.connect(user)
+      }
 
       return user
   }

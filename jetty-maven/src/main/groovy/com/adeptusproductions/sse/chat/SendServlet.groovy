@@ -14,9 +14,11 @@ class SendServlet extends HttpServlet {
         String message = request.getParameter("message")
 
         def system = System.getInstance()
-        def user = system.users.get(sessionId)
+        def user = system.getUser(sessionId)
+        
+        if (!user) { println "could not find user for session id ${sessionId}" }
 
-        println "got message ${message} from session ${sessionId}, user ${user.name}"
+        println "got message ${message} from user ${user.name}, session ${sessionId}"
 
         // TODO use channel param
         system.channels.get("default").message(user, message)

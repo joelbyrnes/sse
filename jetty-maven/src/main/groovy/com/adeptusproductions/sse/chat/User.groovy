@@ -8,6 +8,7 @@ class User implements EventSource {
     String name, sessionId
     System system = System.getInstance()
     Channel[] channels = []
+    Closure connectClosure
 
     public User(sessionId, name) {
         this.sessionId = sessionId
@@ -18,11 +19,18 @@ class User implements EventSource {
     public void onOpen(Emitter emitter) throws IOException {
         println "Connection opened by user ${name}."
         this.emitter = emitter
+        println "call connect closure"
+        connectClosure.call()
+        println "done calling connect closure"
     }
 
     private void emitEvent(String dataToSend) throws IOException {
         println "[${name}] Sending: " + dataToSend
-        this.emitter.data("${dataToSend}\n")
+        try {
+            this.emitter.data("${dataToSend}\n")
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
     }
 
     @Override
@@ -35,7 +43,7 @@ class User implements EventSource {
         emitEvent(s)
     }
 
-    def join(Channel channel) {
-        channels << channel
+    def onConnect(Closure closure) {
+        this.connectClosure = closure
     }
 }

@@ -16,7 +16,8 @@ class Channel {
         sendToAll("Channel", "User ${user.name} has joined the channel. Users: ${users.size()}")
     }
 
-    void sendToAll(name, String message) {
+    // TODO change to take a user - means Channel/System needs to be a user.
+    void sendToAll(String name, String message) {
         println "Channel sendToAll: " + message
         // TODO use an easier JSON converter library like grails.converters.JSON
         def sw = new StringWriter()
@@ -27,7 +28,7 @@ class Channel {
     }
 
     void message(User user, String message) {
-        sendToAll(user, message)
+        sendToAll(user.name, message)
     }
 
     def disconnect(User user) {
